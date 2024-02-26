@@ -7,7 +7,8 @@ import java.util.NoSuchElementException;
  * Queues implemented with arrays.
  *
  * @author Samuel A. Rebelsky
- * @author Your Name Here
+ * @author Tim Yu
+ * @author Vivien Yan
  */
 public class ArrayBasedQueue<T> implements Queue<T> {
   // +--------+----------------------------------------------------------
@@ -59,7 +60,7 @@ public class ArrayBasedQueue<T> implements Queue<T> {
 
   @Override
   public boolean isFull() {
-    return this.back() >= this.values.length;
+    return this.size >= this.values.length;
   } // isFull()
 
   @Override
@@ -78,7 +79,7 @@ public class ArrayBasedQueue<T> implements Queue<T> {
     } // if empty
     // Grab and clear the element at the front of the queue
     T result = this.values[this.front];
-    this.values[this.front++] = null;
+    this.values[postIncrementFront()] = null;
     // We're removing an element, so decrement the size
     --this.size;
     // And we're done
@@ -116,8 +117,18 @@ public class ArrayBasedQueue<T> implements Queue<T> {
    * Get the index of the back of the queue. The back is where we add the next element.
    */
   int back() {
-    return this.size;
+    return (this.size + this.front) % values.length;
   } // back()
+
+  /**
+   * Move the front by one element; wrap around if necessary.
+   * Acts like `this.front++` but with wrap around capabillity. 
+   */
+  int postIncrementFront() {
+    int frontBefore = this.front;
+    this.front = (this.front + 1) % values.length;
+    return frontBefore;
+  }
 
 } // class ArrayBasedQueue<T>
 
